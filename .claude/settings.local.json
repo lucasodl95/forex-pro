@@ -8,7 +8,10 @@
       "Bash(dir:*)",
       "Bash(ping:*)",
       "Bash(del \"C:\\Users\\User\\Desktop\\forex-pro\\forex-pro\\integrations\\simulatedMarketData.js\")",
-      "Bash(clip)"
+      "Bash(clip)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

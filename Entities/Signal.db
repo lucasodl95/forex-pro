@@ -1,0 +1,86 @@
+{
+  "name": "Signal",
+  "type": "object",
+  "properties": {
+    "currency_pair": {
+      "type": "string",
+      "description": "Currency pair like EUR/USD, GBP/JPY"
+    },
+    "signal_type": {
+      "type": "string",
+      "enum": [
+        "BUY",
+        "SELL"
+      ],
+      "description": "Buy or sell signal"
+    },
+    "entry_price": {
+      "type": "number",
+      "description": "Recommended entry price"
+    },
+    "take_profit": {
+      "type": "number",
+      "description": "Take profit level"
+    },
+    "stop_loss": {
+      "type": "number",
+      "description": "Stop loss level"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Signal confidence score 1-10"
+    },
+    "analysis": {
+      "type": "string",
+      "description": "Signal analysis and reasoning"
+    },
+    "time_frame": {
+      "type": "string",
+      "enum": [
+        "5M",
+        "15M",
+        "1H",
+        "4H",
+        "1D"
+      ],
+      "description": "Recommended timeframe"
+    },
+    "risk_reward": {
+      "type": "number",
+      "description": "Risk to reward ratio"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "HIT_TP",
+        "HIT_SL",
+        "EXPIRED"
+      ],
+      "default": "ACTIVE",
+      "description": "Signal status"
+    },
+    "pips_potential": {
+      "type": "number",
+      "description": "Potential pips profit"
+    }
+  },
+  "required": [
+    "currency_pair",
+    "signal_type",
+    "entry_price",
+    "take_profit",
+    "stop_loss",
+    "confidence"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

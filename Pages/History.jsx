@@ -6,13 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarDays, TrendingUp, TrendingDown, Clock } from "lucide-react";
 import { format } from "date-fns";
 
-export default function History() {
+export default function History({ refreshKey }) {
   const [signals, setSignals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadSignals();
-  }, []);
+  }, [refreshKey]);
 
   const loadSignals = async () => {
     const data = await Signal.list("-created_date", 100);
@@ -36,23 +36,23 @@ export default function History() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4 md:p-8">
+    <div className="p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <CalendarDays className="w-8 h-8 text-purple-400" />
           <div>
-            <h1 className="text-3xl font-bold text-white">Signal History</h1>
-            <p className="text-gray-400">Complete record of all generated signals</p>
+            <h1 className="text-3xl font-bold text-white">Histórico de Sinais</h1>
+            <p className="text-gray-400">Registro completo de todos os sinais gerados</p>
           </div>
         </div>
 
         <Tabs defaultValue="all" className="space-y-6">
           <TabsList className="bg-gray-800 border-gray-700">
-            <TabsTrigger value="all" className="data-[state=active]:bg-gray-700">All Signals</TabsTrigger>
-            <TabsTrigger value="ACTIVE" className="data-[state=active]:bg-gray-700">Active</TabsTrigger>
-            <TabsTrigger value="HIT_TP" className="data-[state=active]:bg-gray-700">Hit TP</TabsTrigger>
-            <TabsTrigger value="HIT_SL" className="data-[state=active]:bg-gray-700">Hit SL</TabsTrigger>
-            <TabsTrigger value="EXPIRED" className="data-[state=active]:bg-gray-700">Expired</TabsTrigger>
+            <TabsTrigger value="all" className="data-[state=active]:bg-gray-700">Todos os Sinais</TabsTrigger>
+            <TabsTrigger value="ACTIVE" className="data-[state=active]:bg-gray-700">Ativos</TabsTrigger>
+            <TabsTrigger value="HIT_TP" className="data-[state=active]:bg-gray-700">TP Atingido</TabsTrigger>
+            <TabsTrigger value="HIT_SL" className="data-[state=active]:bg-gray-700">SL Atingido</TabsTrigger>
+            <TabsTrigger value="EXPIRED" className="data-[state=active]:bg-gray-700">Expirados</TabsTrigger>
           </TabsList>
 
           {['all', 'ACTIVE', 'HIT_TP', 'HIT_SL', 'EXPIRED'].map((status) => (
@@ -95,7 +95,7 @@ export default function History() {
                               <span className="text-sm">{format(new Date(signal.created_date), 'MMM d, HH:mm')}</span>
                             </div>
                             <div className="text-sm text-gray-400">
-                              Confidence: <span className="text-white font-semibold">{signal.confidence}/10</span>
+                              Confiança: <span className="text-white font-semibold">{signal.confidence}/10</span>
                             </div>
                           </div>
                         </div>
@@ -104,7 +104,7 @@ export default function History() {
                       <CardContent>
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
                           <div>
-                            <span className="text-sm text-gray-400">Entry</span>
+                            <span className="text-sm text-gray-400">Entrada</span>
                             <p className="font-mono text-white font-semibold">{signal.entry_price}</p>
                           </div>
                           <div>

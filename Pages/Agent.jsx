@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Bot, Loader2 } from 'lucide-react';
-import MessageBubble from '../components/agent/MessageBubble';
+import MessageBubble from '@/Components/agent/MessageBubble.jsx';
 import { motion } from 'framer-motion';
 
 const AGENT_NAME = "trading_assistant";
@@ -27,7 +27,7 @@ export default function AgentPage() {
                 } else {
                     conv = await agentSDK.createConversation({
                         agent_name: AGENT_NAME,
-                        metadata: { name: "Trading Assistant Chat" }
+                        metadata: { name: "Chat do Assistente de Trading" }
                     });
                 }
                 setConversation(conv);
@@ -81,13 +81,13 @@ export default function AgentPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 p-4 md:p-8 flex flex-col">
-            <div className="max-w-4xl mx-auto w-full flex flex-col flex-grow">
+        <div className="p-4 md:p-8 flex flex-col">
+            <div className="max-w-4xl mx-auto w-full flex flex-col" style={{ minHeight: 'calc(100vh - 4rem)' }}>
                 <div className="flex items-center gap-3 mb-8">
                     <Bot className="w-8 h-8 text-green-400" />
                     <div>
-                        <h1 className="text-3xl font-bold text-white">Trading Assistant</h1>
-                        <p className="text-gray-400">Chat with the assistant to manage your signals</p>
+                        <h1 className="text-3xl font-bold text-white">Assistente de Trading</h1>
+                        <p className="text-gray-400">Converse com o assistente para gerenciar seus sinais</p>
                     </div>
                 </div>
 
@@ -109,7 +109,7 @@ export default function AgentPage() {
                         <form onSubmit={handleSendMessage} className="flex items-center gap-4">
                             <Input
                                 type="text"
-                                placeholder="e.g., Create a sell signal for GBP/JPY..."
+                                placeholder="Ex: Crie um sinal de venda para GBP/JPY..."
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"

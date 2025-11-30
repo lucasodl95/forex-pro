@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(dir:*)",
+      "Bash(ping:*)",
+      "Bash(del \"C:\\Users\\User\\Desktop\\forex-pro\\forex-pro\\integrations\\simulatedMarketData.js\")",
+      "Bash(clip)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

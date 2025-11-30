@@ -26,15 +26,15 @@ const FunctionDisplay = ({ toolCall }) => {
     );
     
     const statusConfig = {
-        pending: { icon: Clock, color: 'text-slate-400', text: 'Pending' },
-        running: { icon: Loader2, color: 'text-slate-500', text: 'Running...', spin: true },
-        in_progress: { icon: Loader2, color: 'text-slate-500', text: 'Running...', spin: true },
-        completed: isError ? 
-            { icon: AlertCircle, color: 'text-red-500', text: 'Failed' } : 
-            { icon: CheckCircle2, color: 'text-green-600', text: 'Success' },
-        success: { icon: CheckCircle2, color: 'text-green-600', text: 'Success' },
-        failed: { icon: AlertCircle, color: 'text-red-500', text: 'Failed' },
-        error: { icon: AlertCircle, color: 'text-red-500', text: 'Failed' }
+        pending: { icon: Clock, color: 'text-slate-400', text: 'Pendente' },
+        running: { icon: Loader2, color: 'text-slate-500', text: 'Executando...', spin: true },
+        in_progress: { icon: Loader2, color: 'text-slate-500', text: 'Executando...', spin: true },
+        completed: isError ?
+            { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' } :
+            { icon: CheckCircle2, color: 'text-green-600', text: 'Sucesso' },
+        success: { icon: CheckCircle2, color: 'text-green-600', text: 'Sucesso' },
+        failed: { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' },
+        error: { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' }
     }[status] || { icon: Zap, color: 'text-slate-500', text: '' };
     
     const Icon = statusConfig.icon;
@@ -67,7 +67,7 @@ const FunctionDisplay = ({ toolCall }) => {
                 <div className="mt-1.5 ml-3 pl-3 border-l-2 border-gray-700 space-y-2">
                     {toolCall.arguments_string && (
                         <div>
-                            <div className="text-xs text-gray-500 mb-1">Parameters:</div>
+                            <div className="text-xs text-gray-500 mb-1">Parâmetros:</div>
                             <pre className="bg-gray-800 rounded-md p-2 text-xs text-gray-300 whitespace-pre-wrap">
                                 {(() => {
                                     try {
@@ -81,7 +81,7 @@ const FunctionDisplay = ({ toolCall }) => {
                     )}
                     {parsedResults && (
                         <div>
-                            <div className="text-xs text-gray-500 mb-1">Result:</div>
+                            <div className="text-xs text-gray-500 mb-1">Resultado:</div>
                             <pre className="bg-gray-800 rounded-md p-2 text-xs text-gray-300 whitespace-pre-wrap max-h-48 overflow-auto">
                                 {typeof parsedResults === 'object' ? 
                                     JSON.stringify(parsedResults, null, 2) : parsedResults}

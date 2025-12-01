@@ -73,7 +73,7 @@ export default function Dashboard({ refreshKey }) {
                 </div>
               ) : (
                 <div className="space-y-4 pt-2">
-                  {activeSignals.slice(0, 5).map((signal, index) => (
+                  {activeSignals.slice(0, 6).map((signal, index) => (
                     <SignalCard key={signal.id} signal={signal} index={index} onSignalUpdated={loadSignals} />
                   ))}
                 </div>

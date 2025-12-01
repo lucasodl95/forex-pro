@@ -201,7 +201,7 @@ Retorne no formato JSON especificado.`;
   };
 
   return (
-    <Card className="border-border bg-card text-card-foreground shadow-sm h-full">
+    <Card className="border-border bg-card text-card-foreground shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-3 text-lg font-semibold">
           <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">

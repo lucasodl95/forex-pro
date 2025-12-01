@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Signal } from "@/entities/Signal";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Signal } from "@/Entities/Signal";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import { CalendarDays, TrendingUp, TrendingDown, Clock } from "lucide-react";
 import { format } from "date-fns";
 

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Signal } from "@/entities/Signal";
-import MarketOverview from "@/components/signals/MarketOverview";
-import SignalGenerator from "@/components/signals/SignalGenerator";
-import SignalCard from "@/components/signals/SignaclCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Signal } from "@/Entities/Signal";
+import MarketOverview from "@/Components/signals/MarketOverview";
+import SignalGenerator from "@/Components/signals/SignalGenerator";
+import SignalCard from "@/Components/signals/SignaclCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { TrendingUp, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 

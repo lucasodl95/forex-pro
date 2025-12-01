@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { agentSDK } from '@/agents';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { ScrollArea } from '@/Components/ui/scroll-area';
 import { Send, Bot, Loader2 } from 'lucide-react';
 import MessageBubble from '@/Components/agent/MessageBubble.jsx';
 import { motion } from 'framer-motion';

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Signal } from "@/entities/Signal";
+import { Signal } from "@/Entities/Signal";
 import { InvokeLLM } from "@/integrations/Core";
 import { getMarketData, formatMarketDataForPrompt } from "@/integrations/marketData";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Zap, Loader2, TrendingUp, AlertCircle, Globe, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";

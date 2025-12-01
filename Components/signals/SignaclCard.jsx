@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
 import { TrendingUp, TrendingDown, Clock, Target, Shield, Zap, CheckCircle2, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { manuallyCloseSignal } from "@/integrations/signalTracker";

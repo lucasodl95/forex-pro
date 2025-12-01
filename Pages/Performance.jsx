@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { Signal } from "@/entities/Signal";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Signal } from "@/Entities/Signal";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 import { BarChart3, TrendingUp, Target, Shield, Activity, Award, Zap } from "lucide-react";
 import {
   calculateOverallStats,

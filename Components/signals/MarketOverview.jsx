@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { TrendingUp, Target, Activity, Award, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { calculateWinRate, calculateNetPips, getSignalsByStatus, calculateAverageConfidence } from "@/lib/performanceCalculator";

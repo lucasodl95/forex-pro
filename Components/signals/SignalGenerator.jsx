@@ -128,8 +128,8 @@ Retorne no formato JSON especificado.`;
           // CRITICAL: Garante que currency_pair existe (a IA pode retornar 'pair' ao invés de 'currency_pair')
           const currencyPair = signal.currency_pair || signal.pair;
 
-          // CRITICAL: Garante que signal_type existe (a IA pode retornar 'signal' ao invés de 'signal_type')
-          const signalType = signal.signal_type || signal.signal;
+          // CRITICAL: Garante que signal_type existe (a IA pode retornar 'signal', 'direction' ou 'type' ao invés de 'signal_type')
+          const signalType = signal.signal_type || signal.signal || signal.direction || signal.type;
 
           if (!currencyPair) {
             console.error('Sinal sem par de moedas:', signal);
@@ -201,63 +201,54 @@ Retorne no formato JSON especificado.`;
   };
 
   return (
-    <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-3 text-white">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-6 h-6 text-white" />
+    <Card className="border-border bg-card text-card-foreground shadow-sm h-full">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+            <Zap className="w-5 h-5" />
           </div>
-          Gerador de Sinais com Dados Reais
+          Gerador de Sinais
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-sm text-gray-400">
-          <div className="flex items-start gap-2 mb-2">
-            <Globe className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+        <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
+          <div className="flex items-start gap-2">
+            <Globe className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
             <div>
-              Gera sinais usando <strong className="text-green-400">dados REAIS em tempo real</strong> do Banco Central Europeu (API Frankfurter).
-              100% baseado em taxas de câmbio atuais e histórico real de 7 dias.
+              Análise de <strong className="text-primary">dados reais de mercado</strong> com IA.
+              Baseado em taxas e histórico recente.
             </div>
           </div>
         </div>
 
-        <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-xs text-blue-300">
-          <div className="font-semibold mb-1">✓ Fontes de Dados Reais:</div>
-          <ul className="space-y-1 ml-4">
-            <li>• Taxas de câmbio: Banco Central Europeu</li>
-            <li>• Histórico: 7 dias de dados reais</li>
-            <li>• Análise: GPT-4o-mini com dados verificados</li>
-          </ul>
-        </div>
-
         {lastGenerated && (
-          <div className="text-sm text-green-400 bg-green-400/10 p-2 rounded-lg">
-            ✓ Última geração: {lastGenerated.toLocaleTimeString()} (dados reais)
+          <div className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 p-2 rounded-md border border-emerald-200 dark:border-emerald-900/50">
+            ✓ Última geração: {lastGenerated.toLocaleTimeString()}
           </div>
         )}
 
         {progress && (
-          <div className="text-sm text-blue-400 bg-blue-400/10 p-2 rounded-lg animate-pulse">
+          <div className="text-sm text-primary bg-primary/10 p-2 rounded-md animate-pulse border border-primary/20">
             {progress}
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-2 pt-2">
           <Button
             onClick={generateSignals}
             disabled={isGenerating}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold"
+            className="w-full"
             size="lg"
           >
             {isGenerating ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Buscando Dados Reais...
+                Analisando Mercado...
               </>
             ) : (
               <>
                 <TrendingUp className="w-5 h-5 mr-2" />
-                Gerar Novos Sinais (8 pares)
+                Gerar Novos Sinais
               </>
             )}
           </Button>
@@ -265,17 +256,17 @@ Retorne no formato JSON especificado.`;
           <Button
             onClick={clearAllSignals}
             disabled={isGenerating}
-            variant="outline"
-            className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+            variant="ghost"
+            className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
             size="sm"
           >
             <Trash2 className="w-4 h-4 mr-2" />
-            Limpar Todos os Sinais
+            Limpar Histórico
           </Button>
         </div>
 
-        <div className="text-xs text-gray-500 mt-2">
-          ⚙️ API gratuita e sem necessidade de chave. Dados fornecidos pelo BCE.
+        <div className="text-xs text-muted-foreground text-center pt-1">
+          via Frankfurter API (BCE)
         </div>
       </CardContent>
     </Card>

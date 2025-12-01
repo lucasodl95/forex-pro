@@ -2,19 +2,24 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { trackAllActiveSignals } from '@/integrations/signalTracker';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
-import { RefreshCw, CheckCircle2, XCircle, Loader2, Clock } from 'lucide-react';
+import { RefreshCw, CheckCircle2, Loader2, Clock, Bug, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useNotifications } from '@/Components/context/NotificationContext';
 
 // Intervalo de verificação automática (em milissegundos)
 const AUTO_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutos
 
 export default function SignalMonitor({ onSignalsUpdated }) {
+  const { addNotification } = useNotifications();
   const [isChecking, setIsChecking] = useState(false);
   const [lastCheck, setLastCheck] = useState(null);
   const [nextCheck, setNextCheck] = useState(null);
   const [stats, setStats] = useState({ checked: 0, updated: 0 });
   const [autoCheckEnabled, setAutoCheckEnabled] = useState(true);
+  const [debugMode, setDebugMode] = useState(false); // Default hidden for cleaner look
+  const [lastResults, setLastResults] = useState([]);
 
   // Refs para garantir que só uma instância rode (proteção contra React Strict Mode)
   const timersRef = useRef({ initial: null, interval: null });
@@ -36,6 +41,7 @@ export default function SignalMonitor({ onSignalsUpdated }) {
         toast.info('Verificando sinais ativos...', { duration: 2000 });
       }
 
+      console.log('🚀 [SignalMonitor] Iniciando verificação manual/automática...');
       const result = await trackAllActiveSignals();
 
       setStats({
@@ -44,18 +50,34 @@ export default function SignalMonitor({ onSignalsUpdated }) {
       });
 
       setLastCheck(new Date());
+      setLastResults(result.results || []); // Salva resultados para debug
+
+      console.log('📊 [SignalMonitor] Resultado:', {
+        checked: result.checked,
+        updated: result.updated,
+        results: result.results
+      });
 
       // Notificações baseadas no resultado
       if (result.updated > 0) {
-        const tpHits = result.results.filter(r => r.action === 'UPDATED' && r.type === 'TP').length;
-        const slHits = result.results.filter(r => r.action === 'UPDATED' && r.type === 'SL').length;
-
-        if (tpHits > 0) {
-          toast.success(`🎯 ${tpHits} sinal(is) atingiu Take Profit!`, { duration: 5000 });
-        }
-        if (slHits > 0) {
-          toast.error(`🛑 ${slHits} sinal(is) atingiu Stop Loss`, { duration: 5000 });
-        }
+        // Processar cada resultado atualizado para gerar notificação
+        result.results.forEach(r => {
+            if (r.action === 'UPDATED') {
+                if (r.type === 'TP') {
+                    addNotification(
+                        'Take Profit Atingido!', 
+                        `O sinal ${r.signal.currency_pair} atingiu o alvo de lucro em ${r.currentPrice}.`,
+                        'success'
+                    );
+                } else if (r.type === 'SL') {
+                    addNotification(
+                        'Stop Loss Atingido', 
+                        `O sinal ${r.signal.currency_pair} atingiu o limite de perda em ${r.currentPrice}.`,
+                        'error'
+                    );
+                }
+            }
+        });
 
         // Atualiza dashboard
         if (onSignalsUpdated) {
@@ -77,7 +99,7 @@ export default function SignalMonitor({ onSignalsUpdated }) {
     } finally {
       setIsChecking(false);
     }
-  }, [isChecking, onSignalsUpdated]);
+  }, [isChecking, onSignalsUpdated, addNotification]);
 
   /**
    * Verificação automática periódica
@@ -159,42 +181,40 @@ export default function SignalMonitor({ onSignalsUpdated }) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
+    <Card className="border-border bg-card text-card-foreground shadow-sm">
       <CardContent className="p-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Status e informações */}
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-1">
             <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${autoCheckEnabled ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`} />
-              <span className="text-sm font-semibold text-white">
+              <div className={`w-2 h-2 rounded-full ${autoCheckEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-muted-foreground'}`} />
+              <span className="text-sm font-medium">
                 {autoCheckEnabled ? 'Monitoramento Ativo' : 'Monitoramento Pausado'}
               </span>
+              {autoCheckEnabled && nextCheck && (
+                <span className="text-xs text-muted-foreground ml-2 border-l pl-2 border-border">
+                  Próxima: {getTimeUntilNextCheck()}
+                </span>
+              )}
             </div>
 
             {lastCheck && (
-              <div className="text-xs text-gray-400 space-y-1">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  <span>Última verificação: {lastCheck.toLocaleTimeString()}</span>
-                </div>
+                  {lastCheck.toLocaleTimeString()}
+                </span>
                 {stats.checked > 0 && (
-                  <div className="flex items-center gap-3 ml-5">
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-blue-400" />
-                      {stats.checked} verificados
-                    </span>
-                    {stats.updated > 0 && (
-                      <span className="flex items-center gap-1 text-green-400 font-semibold">
-                        <RefreshCw className="w-3 h-3" />
-                        {stats.updated} atualizados
-                      </span>
-                    )}
-                  </div>
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-primary" />
+                    {stats.checked}
+                  </span>
                 )}
-                {autoCheckEnabled && nextCheck && (
-                  <div className="text-gray-500">
-                    Próxima em: {getTimeUntilNextCheck()}
-                  </div>
+                {stats.updated > 0 && (
+                  <span className="flex items-center gap-1 text-emerald-500 font-medium">
+                    <RefreshCw className="w-3 h-3" />
+                    {stats.updated}
+                  </span>
                 )}
               </div>
             )}
@@ -206,40 +226,100 @@ export default function SignalMonitor({ onSignalsUpdated }) {
               onClick={() => checkSignals(true)}
               disabled={isChecking}
               size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              variant="secondary"
+              className="h-8"
             >
-              {isChecking ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Verificando...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Verificar Agora
-                </>
-              )}
+              {isChecking ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <RefreshCw className="w-3 h-3 mr-2" />}
+              Verificar
             </Button>
 
             <Button
               onClick={() => setAutoCheckEnabled(!autoCheckEnabled)}
               size="sm"
               variant="outline"
-              className={autoCheckEnabled ? 'border-green-500 text-green-400' : 'border-gray-600 text-gray-400'}
+              className={cn("h-8", autoCheckEnabled && "text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/50 dark:hover:bg-emerald-900/20 dark:text-emerald-500")}
             >
-              {autoCheckEnabled ? 'Pausar' : 'Ativar'} Auto
+              {autoCheckEnabled ? 'Pausar' : 'Ativar Auto'}
+            </Button>
+
+            <Button
+              onClick={() => setDebugMode(!debugMode)}
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-muted-foreground"
+              title="Debug Info"
+            >
+               <Bug className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        {/* Informações sobre intervalo */}
-        {autoCheckEnabled && (
-          <div className="mt-3 pt-3 border-t border-gray-700">
-            <div className="text-xs text-gray-500">
-              ℹ️ Verificação automática a cada {AUTO_CHECK_INTERVAL / 60000} minutos enquanto o app estiver aberto
-            </div>
-          </div>
-        )}
+        {/* Painel de Debug */}
+        <AnimatePresence>
+          {debugMode && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="mt-4 pt-4 border-t border-border space-y-2 text-xs">
+                <div className="flex items-center justify-between text-muted-foreground mb-2">
+                    <span>Log da última verificação</span>
+                    <span>{lastResults.length} eventos</span>
+                </div>
+                
+                {lastResults.length > 0 ? (
+                  <div className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                    {lastResults.map((result, idx) => (
+                      <div
+                        key={idx}
+                        className={cn(
+                          "p-2 rounded border",
+                          result.action === 'UPDATED' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-400' :
+                          result.action === 'ERROR' ? 'bg-destructive/10 border-destructive/20 text-destructive' :
+                          'bg-muted/50 border-border text-muted-foreground'
+                        )}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-mono font-semibold">
+                            {result.signal?.currency_pair || 'N/A'}
+                          </span>
+                          <span className="font-semibold opacity-80">
+                            {result.action}
+                          </span>
+                        </div>
+
+                        {result.action === 'UPDATED' && (
+                          <div>
+                            {result.type} atingido @ {result.currentPrice?.toFixed(5)}
+                          </div>
+                        )}
+
+                        {result.action === 'NO_CHANGE' && result.currentPrice && (
+                          <div>
+                            Preço: {result.currentPrice.toFixed(5)}
+                            <span className="opacity-60 ml-2">
+                              TP: {result.signal?.take_profit} | SL: {result.signal?.stop_loss}
+                            </span>
+                          </div>
+                        )}
+
+                        {result.action === 'ERROR' && (
+                          <div>Erro: {result.error}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-muted-foreground text-center py-4">
+                    Nenhuma verificação realizada ainda.
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </CardContent>
     </Card>
   );

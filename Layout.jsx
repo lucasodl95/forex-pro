@@ -1,64 +1,18 @@
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Bot, History, TrendingUp } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
+import { useState } from 'react';
+import { ThemeProvider } from '@/Components/ui/ThemeProvider';
+import { NotificationProvider } from '@/Components/context/NotificationContext';
+import { Sidebar } from '@/Components/ui/Sidebar';
+import { Header } from '@/Components/ui/Header';
+import { cn } from '@/lib/utils';
 import Dashboard from '@/Pages/Dashboard';
 import AgentPage from '@/Pages/Agent';
 import HistoryPage from '@/Pages/History';
 import PerformancePage from '@/Pages/Performance';
 import SignalMonitor from '@/Components/tracking/SignalMonitor';
-import { useState } from 'react';
 
-function Navigation() {
-  const location = useLocation();
-
-  const navItems = [
-    { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-    { path: '/assistente', icon: Bot, label: 'Assistente' },
-    { path: '/historico', icon: History, label: 'Histórico' },
-    { path: '/performance', icon: TrendingUp, label: 'Performance' },
-  ];
-
-  return (
-    <nav className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-xl font-bold text-white hidden md:block">Forex Pro</h1>
-          </div>
-
-          <div className="flex gap-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all",
-                    isActive
-                      ? "bg-green-600 text-white"
-                      : "text-gray-400 hover:text-white hover:bg-gray-700"
-                  )}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="hidden md:inline">{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function MainContent() {
+function MainContent({ collapsed }) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleSignalsUpdated = () => {
@@ -67,29 +21,39 @@ function MainContent() {
   };
 
   return (
-    <>
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
+    <div className={cn(
+      "transition-all duration-300 min-h-screen bg-background flex flex-col",
+      collapsed ? "md:pl-20" : "md:pl-64"
+    )}>
+      <Header />
+      <div className="flex-1 max-w-[1600px] w-full mx-auto px-4 md:px-8 py-6 space-y-6">
         <SignalMonitor onSignalsUpdated={handleSignalsUpdated} />
-      </div>
 
-      <Routes key={refreshKey}>
-        <Route path="/" element={<Dashboard refreshKey={refreshKey} />} />
-        <Route path="/assistente" element={<AgentPage />} />
-        <Route path="/historico" element={<HistoryPage refreshKey={refreshKey} />} />
-        <Route path="/performance" element={<PerformancePage refreshKey={refreshKey} />} />
-      </Routes>
-    </>
+        <Routes key={refreshKey}>
+          <Route path="/" element={<Dashboard refreshKey={refreshKey} />} />
+          <Route path="/assistente" element={<AgentPage />} />
+          <Route path="/historico" element={<HistoryPage refreshKey={refreshKey} />} />
+          <Route path="/performance" element={<PerformancePage refreshKey={refreshKey} />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
 export default function Layout() {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-900">
-        <Navigation />
-        <MainContent />
-        <Toaster position="top-right" theme="dark" richColors />
-      </div>
-    </Router>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <NotificationProvider>
+        <Router>
+          <div className="min-h-screen bg-background text-foreground font-sans antialiased">
+            <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+            <MainContent collapsed={collapsed} />
+            <Toaster position="top-right" richColors />
+          </div>
+        </Router>
+      </NotificationProvider>
+    </ThemeProvider>
   );
 }

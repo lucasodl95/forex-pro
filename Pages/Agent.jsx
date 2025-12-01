@@ -81,45 +81,59 @@ export default function AgentPage() {
     };
 
     return (
-        <div className="p-4 md:p-8 flex flex-col">
-            <div className="max-w-4xl mx-auto w-full flex flex-col" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-                <div className="flex items-center gap-3 mb-8">
-                    <Bot className="w-8 h-8 text-green-400" />
-                    <div>
-                        <h1 className="text-3xl font-bold text-white">Assistente de Trading</h1>
-                        <p className="text-gray-400">Converse com o assistente para gerenciar seus sinais</p>
-                    </div>
+        <div className="h-[calc(100vh-5rem)] flex flex-col animate-in fade-in duration-500">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 shadow-sm">
+                    <Bot className="w-6 h-6 text-primary" />
                 </div>
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Assistente de Trading</h1>
+                    <p className="text-muted-foreground">Converse com o assistente para gerenciar seus sinais</p>
+                </div>
+            </div>
 
-                <div className="bg-gray-800/50 border border-gray-700 rounded-xl flex flex-col flex-grow">
-                    <ScrollArea className="flex-grow p-6" ref={scrollAreaRef}>
-                        {isLoading ? (
-                            <div className="flex items-center justify-center h-full">
-                                <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
-                            </div>
-                        ) : (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                {messages.map((msg, index) => (
+            <div className="bg-card border border-border rounded-xl flex flex-col flex-grow shadow-sm overflow-hidden">
+                <ScrollArea className="flex-grow p-4 md:p-6" ref={scrollAreaRef}>
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <p>Conectando ao assistente...</p>
+                        </div>
+                    ) : (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                            {messages.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center h-64 text-muted-foreground text-center">
+                                    <Bot className="w-12 h-12 mb-4 opacity-20" />
+                                    <p className="text-lg font-medium">Olá! Como posso ajudar hoje?</p>
+                                    <p className="text-sm opacity-70">Pergunte sobre análises de mercado, sinais ou tendências.</p>
+                                </div>
+                            ) : (
+                                messages.map((msg, index) => (
                                     <MessageBubble key={index} message={msg} />
-                                ))}
-                            </motion.div>
-                        )}
-                    </ScrollArea>
-                    <div className="p-4 border-t border-gray-700">
-                        <form onSubmit={handleSendMessage} className="flex items-center gap-4">
-                            <Input
-                                type="text"
-                                placeholder="Ex: Crie um sinal de venda para GBP/JPY..."
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                                disabled={isSending}
-                            />
-                            <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSending || !newMessage.trim()}>
-                                {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                            </Button>
-                        </form>
-                    </div>
+                                ))
+                            )}
+                        </motion.div>
+                    )}
+                </ScrollArea>
+                <div className="p-4 border-t border-border bg-muted/20">
+                    <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+                        <Input
+                            type="text"
+                            placeholder="Ex: Crie um sinal de venda para GBP/JPY..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            className="flex-grow bg-background"
+                            disabled={isSending}
+                        />
+                        <Button 
+                            type="submit" 
+                            size="icon"
+                            disabled={isSending || !newMessage.trim()}
+                            className="shrink-0"
+                        >
+                            {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                        </Button>
+                    </form>
                 </div>
             </div>
         </div>

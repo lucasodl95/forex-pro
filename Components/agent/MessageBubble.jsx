@@ -26,16 +26,16 @@ const FunctionDisplay = ({ toolCall }) => {
     );
     
     const statusConfig = {
-        pending: { icon: Clock, color: 'text-slate-400', text: 'Pendente' },
-        running: { icon: Loader2, color: 'text-slate-500', text: 'Executando...', spin: true },
-        in_progress: { icon: Loader2, color: 'text-slate-500', text: 'Executando...', spin: true },
+        pending: { icon: Clock, color: 'text-muted-foreground', text: 'Pendente' },
+        running: { icon: Loader2, color: 'text-muted-foreground', text: 'Executando...', spin: true },
+        in_progress: { icon: Loader2, color: 'text-muted-foreground', text: 'Executando...', spin: true },
         completed: isError ?
-            { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' } :
-            { icon: CheckCircle2, color: 'text-green-600', text: 'Sucesso' },
-        success: { icon: CheckCircle2, color: 'text-green-600', text: 'Sucesso' },
-        failed: { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' },
-        error: { icon: AlertCircle, color: 'text-red-500', text: 'Falhou' }
-    }[status] || { icon: Zap, color: 'text-slate-500', text: '' };
+            { icon: AlertCircle, color: 'text-destructive', text: 'Falhou' } :
+            { icon: CheckCircle2, color: 'text-emerald-600 dark:text-emerald-400', text: 'Sucesso' },
+        success: { icon: CheckCircle2, color: 'text-emerald-600 dark:text-emerald-400', text: 'Sucesso' },
+        failed: { icon: AlertCircle, color: 'text-destructive', text: 'Falhou' },
+        error: { icon: AlertCircle, color: 'text-destructive', text: 'Falhou' }
+    }[status] || { icon: Zap, color: 'text-muted-foreground', text: '' };
     
     const Icon = statusConfig.icon;
     const formattedName = name.split('.').reverse().join(' ').toLowerCase();
@@ -46,29 +46,29 @@ const FunctionDisplay = ({ toolCall }) => {
                 onClick={() => setExpanded(!expanded)}
                 className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all w-full text-left",
-                    "hover:bg-gray-800",
-                    expanded ? "bg-gray-800 border-gray-600" : "bg-transparent border-gray-700"
+                    "hover:bg-muted",
+                    expanded ? "bg-muted border-muted-foreground/20" : "bg-transparent border-border"
                 )}
             >
                 <Icon className={cn("h-3 w-3", statusConfig.color, statusConfig.spin && "animate-spin")} />
-                <span className="text-gray-300">{formattedName}</span>
+                <span className="text-foreground font-mono">{formattedName}</span>
                 {statusConfig.text && (
-                    <span className={cn("text-gray-500", isError && "text-red-500")}>
+                    <span className={cn("text-muted-foreground", isError && "text-destructive")}>
                         • {statusConfig.text}
                     </span>
                 )}
                 {!statusConfig.spin && (toolCall.arguments_string || results) && (
-                    <ChevronRight className={cn("h-3 w-3 text-gray-400 transition-transform ml-auto", 
+                    <ChevronRight className={cn("h-3 w-3 text-muted-foreground transition-transform ml-auto", 
                         expanded && "rotate-90")} />
                 )}
             </button>
             
             {expanded && !statusConfig.spin && (
-                <div className="mt-1.5 ml-3 pl-3 border-l-2 border-gray-700 space-y-2">
+                <div className="mt-1.5 ml-3 pl-3 border-l-2 border-border space-y-2">
                     {toolCall.arguments_string && (
                         <div>
-                            <div className="text-xs text-gray-500 mb-1">Parâmetros:</div>
-                            <pre className="bg-gray-800 rounded-md p-2 text-xs text-gray-300 whitespace-pre-wrap">
+                            <div className="text-xs text-muted-foreground mb-1">Parâmetros:</div>
+                            <pre className="bg-muted rounded-md p-2 text-xs text-muted-foreground whitespace-pre-wrap overflow-x-auto font-mono">
                                 {(() => {
                                     try {
                                         return JSON.stringify(JSON.parse(toolCall.arguments_string), null, 2);
@@ -81,8 +81,8 @@ const FunctionDisplay = ({ toolCall }) => {
                     )}
                     {parsedResults && (
                         <div>
-                            <div className="text-xs text-gray-500 mb-1">Resultado:</div>
-                            <pre className="bg-gray-800 rounded-md p-2 text-xs text-gray-300 whitespace-pre-wrap max-h-48 overflow-auto">
+                            <div className="text-xs text-muted-foreground mb-1">Resultado:</div>
+                            <pre className="bg-muted rounded-md p-2 text-xs text-muted-foreground whitespace-pre-wrap max-h-48 overflow-auto font-mono">
                                 {typeof parsedResults === 'object' ? 
                                     JSON.stringify(parsedResults, null, 2) : parsedResults}
                             </pre>
@@ -100,20 +100,26 @@ export default function MessageBubble({ message }) {
     return (
         <div className={cn("flex gap-3 my-4", isUser ? "justify-end" : "justify-start")}>
             {!isUser && (
-                <div className="h-8 w-8 rounded-lg bg-gray-700 flex-shrink-0 flex items-center justify-center mt-0.5">
-                    <Bot className="h-5 w-5 text-green-400" />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0 flex items-center justify-center mt-0.5 border border-primary/20">
+                    <Bot className="h-5 w-5 text-primary" />
                 </div>
             )}
             <div className={cn("max-w-[85%]", isUser && "flex flex-col items-end")}>
                 {message.content && (
                     <div className={cn(
-                        "rounded-2xl px-4 py-2.5",
-                        isUser ? "bg-green-600 text-white" : "bg-gray-800 text-gray-200"
+                        "rounded-2xl px-4 py-2.5 shadow-sm",
+                        isUser 
+                            ? "bg-primary text-primary-foreground" 
+                            : "bg-muted/50 text-foreground border border-border"
                     )}>
                         <ReactMarkdown 
-                            className="text-sm prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+                            className={cn(
+                                "text-sm prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+                                isUser ? "prose-invert" : "dark:prose-invert"
+                            )}
                             components={{
                                 p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
+                                code: ({ children }) => <code className="bg-black/10 dark:bg-white/10 rounded px-1">{children}</code>
                             }}
                         >
                             {message.content}

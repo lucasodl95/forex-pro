@@ -12,12 +12,12 @@ export default function MarketOverview({ signals }) {
   const avgConfidence = calculateAverageConfidence(signals);
 
   // Determina cor dos pips (verde se positivo, vermelho se negativo)
-  const pipsColor = netPips >= 0 ? "text-green-400" : "text-red-400";
-  const pipsBgColor = netPips >= 0 ? "bg-green-500/10" : "bg-red-500/10";
+  const pipsColor = netPips >= 0 ? "text-emerald-500 dark:text-emerald-400" : "text-destructive";
+  const pipsBgColor = netPips >= 0 ? "bg-emerald-100 dark:bg-emerald-900/20" : "bg-destructive/10";
 
   // Determina cor do win rate
-  const winRateColor = winRate >= 60 ? "text-green-400" : winRate >= 40 ? "text-yellow-400" : "text-red-400";
-  const winRateBgColor = winRate >= 60 ? "bg-green-500/10" : winRate >= 40 ? "bg-yellow-500/10" : "bg-red-500/10";
+  const winRateColor = winRate >= 60 ? "text-emerald-500 dark:text-emerald-400" : winRate >= 40 ? "text-amber-500 dark:text-amber-400" : "text-destructive";
+  const winRateBgColor = winRate >= 60 ? "bg-emerald-100 dark:bg-emerald-900/20" : winRate >= 40 ? "bg-amber-100 dark:bg-amber-900/20" : "bg-destructive/10";
 
   const stats = [
     {
@@ -41,16 +41,16 @@ export default function MarketOverview({ signals }) {
       value: statusCounts.ACTIVE,
       subtitle: `${statusCounts.total} total`,
       icon: Activity,
-      color: "text-blue-400",
-      bgColor: "bg-blue-500/10"
+      color: "text-blue-500 dark:text-blue-400",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20"
     },
     {
       title: "Confiança Média",
       value: signals.length > 0 ? `${avgConfidence}/10` : "N/A",
       subtitle: `${signals.length} sinais`,
       icon: Zap,
-      color: "text-yellow-400",
-      bgColor: "bg-yellow-500/10"
+      color: "text-amber-500 dark:text-amber-400",
+      bgColor: "bg-amber-100 dark:bg-amber-900/20"
     }
   ];
 
@@ -63,14 +63,14 @@ export default function MarketOverview({ signals }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
         >
-          <Card className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-300">
+          <Card className="bg-card border-border hover:shadow-md transition-all duration-300">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-gray-400 mb-1">{stat.title}</p>
+                  <p className="text-sm text-muted-foreground mb-1">{stat.title}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
                   {stat.subtitle && (
-                    <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{stat.subtitle}</p>
                   )}
                 </div>
                 <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center flex-shrink-0`}>

@@ -1,142 +1,175 @@
-# Forex Pro - Assistente de Trading com IA
+# 📈 Forex Pro - Assistente de Trading com IA
 
-> 🚀 **Início Rápido:** Veja o [Guia de Início Rápido](GUIA_INICIO_RAPIDO.md) para começar em minutos!
+> 🚀 **Sistema completo de trading com dados reais, tracking automático e análise de performance**
 
-## Visão Geral
+## 🎯 Visão Geral
 
-**Forex Pro** é uma aplicação web avançada de trading de Forex que utiliza inteligência artificial da OpenAI (GPT-4) para gerar sinais de trading automatizados e fornecer assistência em tempo real aos traders. A aplicação combina análise técnica, análise fundamental e dados de mercado em tempo real para gerar sinais de trading de alta qualidade.
+**Forex Pro** é uma aplicação web avançada de trading de Forex que utiliza:
+- **Dados de mercado REAIS** em tempo real (API Frankfurter - Banco Central Europeu)
+- **Inteligência Artificial** (OpenAI GPT-4o-mini) para análise e geração de sinais
+- **Tracking automático** de sinais com verificação de TP/SL
+- **Cálculos de performance** em tempo real (win rate, pips líquidos, etc.)
 
-## Características Principais
+## ✨ Características Principais
 
-### 1. Gerador de Sinais de IA
-- Geração automática de 5-8 sinais de trading de alta qualidade
-- Análise de múltiplos pares de moedas (EUR/USD, GBP/USD, USD/JPY, AUD/USD, etc.)
-- Sinais incluem:
-  - Tipo de operação (BUY/SELL)
-  - Preço de entrada
-  - Take Profit (TP)
-  - Stop Loss (SL)
-  - Nível de confiança (1-10)
-  - Timeframe (5M, 15M, 1H, 4H, 1D)
-  - Razão Risco:Recompensa
-  - Potencial de pips
-  - Análise detalhada
+### 🤖 1. Geração de Sinais com Dados Reais
+- ✅ **100% baseado em dados reais** do Banco Central Europeu (API Frankfurter)
+- ✅ Análise de **12 pares de moedas principais**
+- ✅ Geração automática de 5-8 sinais de alta qualidade
+- ✅ Análise técnica com histórico de 7 dias
+- ✅ Cálculos precisos de TP, SL, Risk:Reward e Pips
 
-### 2. Assistente de Trading com Chat
-- Interface de chat conversacional com IA
-- Gerenciamento de sinais via comandos de texto
-- Histórico de conversação persistente
-- Respostas em Markdown formatadas
-- Visualização de chamadas de ferramentas em tempo real
+**Cada sinal inclui:**
+- Tipo de operação (BUY/SELL)
+- Preço de entrada atual
+- Take Profit (TP) calculado
+- Stop Loss (SL) calculado
+- Nível de confiança (1-10)
+- Timeframe (15M, 1H, 4H)
+- Razão Risco:Recompensa (mínimo 1.5:1)
+- Potencial de pips (mínimo 10 pips)
+- Análise detalhada baseada em dados reais
 
-### 3. Dashboard Interativo
-- Visão geral do mercado em tempo real
-- Estatísticas de sinais ativos
-- Cards de sinais com animações suaves
-- Interface responsiva e moderna
+### 🔍 2. Tracking Automático de Sinais (FASE 1 ✅)
+- ✅ **Verificação automática a cada 5 minutos**
+- ✅ Busca preços atuais de mercado
+- ✅ Compara com TP e SL de cada sinal ativo
+- ✅ Atualiza status automaticamente (ACTIVE → HIT_TP/HIT_SL)
+- ✅ Registra timestamp e preço de fechamento
+- ✅ Notificações em tempo real quando TP/SL é atingido
+- ✅ **Controles manuais** nos cards (botões "TP Atingido" e "SL Atingido")
 
-### 4. Histórico Completo de Sinais
-- Registro completo de todos os sinais gerados
-- Filtros por status (Ativo, TP atingido, SL atingido, Expirado)
-- Detalhes completos de cada sinal
-- Interface organizada em abas
+### 📊 3. Performance Real (FASE 2 ✅)
+- ✅ **Win Rate** calculado em tempo real
+- ✅ **Pips Líquidos** (ganhos - perdas)
+- ✅ **Confiança Média** de todos os sinais
+- ✅ **Performance por Par de Moedas** com breakdown detalhado
+- ✅ Estatísticas por status (Ativos, TP, SL)
+- ✅ Melhores e piores sinais
+- ✅ Dashboard atualiza automaticamente
 
-### 5. Análise de Performance
-- Taxa de acerto (Win Rate)
-- Pips líquidos totais
-- Confiança média dos sinais
-- Performance por par de moedas
-- Breakdown de status dos sinais
-- Histórico de performance recente
+### 🎨 4. Interface Moderna
+- Dashboard interativo com estatísticas em tempo real
+- Cards animados (Framer Motion)
+- Tema dark com Tailwind CSS
+- Componentes reutilizáveis (shadcn/ui)
+- Responsivo para mobile e desktop
+- Sistema de notificações (Sonner)
 
-## Tecnologias Utilizadas
+### 📜 5. Histórico e Análise
+- Histórico completo de todos os sinais
+- Filtros por status (Ativo, TP atingido, SL atingido)
+- Página de Performance com estatísticas detalhadas
+- Análise de performance por período
+- Exportação de dados (futuro)
+
+## 🏗️ Arquitetura
+
+### Dados de Mercado
+```
+API Frankfurter (Banco Central Europeu)
+    ↓
+Busca taxas de câmbio atuais + histórico 7 dias
+    ↓
+Análise de tendência (BULLISH/BEARISH/NEUTRAL)
+    ↓
+Cálculo de volatilidade
+    ↓
+IA analisa e gera sinais baseados em dados reais
+```
+
+### Tracking Automático
+```
+SignalMonitor (a cada 5 min)
+    ↓
+Busca todos os sinais ACTIVE
+    ↓
+Para cada sinal: busca preço atual
+    ↓
+Compara com TP e SL
+    ↓
+Se atingido: atualiza status + notifica
+    ↓
+Dashboard recarrega automaticamente
+```
+
+### Cálculos de Performance
+```
+PerformanceCalculator
+    ├─ Win Rate = (TP / Total Fechados) × 100
+    ├─ Pips Líquidos = Σ(Pips ganhos) - Σ(Pips perdidos)
+    ├─ Performance por Par
+    └─ Estatísticas por período
+```
+
+## 🛠️ Tecnologias Utilizadas
 
 ### Frontend
-- **React** - Biblioteca JavaScript para interfaces de usuário
-- **Framer Motion** - Biblioteca de animações para React
-- **Lucide React** - Biblioteca de ícones moderna
-- **shadcn/ui** - Componentes UI reutilizáveis e acessíveis
-- **React Markdown** - Renderização de Markdown
-- **date-fns** - Manipulação de datas
+- **React 18** + **Vite** - Build tool moderno e rápido
+- **React Router DOM** - Navegação entre páginas
+- **Framer Motion** - Animações suaves
+- **Tailwind CSS** - Estilização utility-first
+- **shadcn/ui** - Componentes UI de alta qualidade
 - **Sonner** - Sistema de notificações toast
+- **Lucide React** - Ícones modernos
+- **date-fns** - Manipulação de datas
 
-### Backend/IA
-- **OpenAI API** - API da OpenAI para modelos de linguagem
-- **GPT-4 Turbo** - Modelo de IA para geração de sinais e assistência
-- **InvokeLLM** - Integração customizada com OpenAI
-- **openaiSDK** - SDK customizado para conversações
+### Backend/APIs
+- **OpenAI API** (GPT-4o-mini) - Análise e geração de sinais
+- **Frankfurter API** - Dados de câmbio do Banco Central Europeu (gratuita, sem chave)
+- **localStorage** - Persistência local de sinais
 
-### Banco de Dados
-- **Signal.db** - Banco de dados local para armazenamento de sinais
+### Integrações
+- `integrations/marketData.js` - Busca dados reais de mercado
+- `integrations/signalTracker.js` - Tracking automático de sinais
+- `integrations/openai.js` - Integração com OpenAI
+- `lib/performanceCalculator.js` - Cálculos de performance
 
-## Modelo de IA Utilizado
-
-A aplicação utiliza a **API da OpenAI** com o modelo **GPT-4 Turbo**. O modelo é usado para:
-
-1. **Geração de Sinais** (`InvokeLLM`)
-   - Análise de mercado em tempo real
-   - Geração de sinais estruturados via JSON Schema
-   - Resposta em formato JSON estruturado
-   - Análise técnica e fundamental
-
-2. **Assistente de Conversação** (`openaiSDK`)
-   - Chat interativo para gerenciar sinais
-   - Subscriptions em tempo real para atualizações
-   - Histórico de conversação persistente
-   - Respostas contextualizadas em português brasileiro
-
-## Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```
 forex-pro/
-├── agents/
-│   └── index.js                  # Re-export do SDK da OpenAI
-├── integrations/
-│   ├── openai.js                 # Integração principal com OpenAI
-│   └── Core.js                   # Exports centralizados
 ├── Components/
 │   ├── agent/
-│   │   └── MessageBubble.html    # Componente de mensagem do chat (React/JSX)
-│   └── signals/
-│       ├── SignalCard.html       # Card de exibição de sinal (React/JSX)
-│       ├── MarketOverview.html   # Visão geral do mercado (React/JSX)
-│       └── SignalGenerator.html  # Gerador de sinais (React/JSX)
+│   │   └── MessageBubble.jsx      # Componente de mensagem do chat
+│   ├── signals/
+│   │   ├── SignalCard.jsx         # Card de exibição de sinal
+│   │   ├── MarketOverview.jsx     # Visão geral do mercado
+│   │   └── SignalGenerator.jsx    # Gerador de sinais
+│   ├── tracking/
+│   │   └── SignalMonitor.jsx      # Monitor de tracking automático
+│   └── ui/                        # Componentes shadcn/ui
 ├── Pages/
-│   ├── Dashboard.html            # Página principal (React/JSX)
-│   ├── Agent.html                # Página do assistente (React/JSX)
-│   ├── History.html              # Histórico de sinais (React/JSX)
-│   └── Performance.html          # Análise de performance (React/JSX)
+│   ├── Dashboard.jsx              # Dashboard principal
+│   ├── Agent.jsx                  # Assistente com chat
+│   ├── History.jsx                # Histórico de sinais
+│   └── Performance.jsx            # Análise de performance
 ├── Entities/
-│   └── Signal.db                 # Banco de dados de sinais
-├── Layout.js                     # Layout principal da aplicação
-├── .env                          # Variáveis de ambiente (NÃO COMMITAR)
-├── .env.example                  # Exemplo de variáveis de ambiente
-├── .gitignore                    # Arquivos ignorados pelo Git
-└── README.md                     # Este arquivo
-
+│   └── Signal.js                  # Entidade de sinal (CRUD)
+├── integrations/
+│   ├── Core.js                    # Exports centralizados
+│   ├── openai.js                  # Cliente OpenAI
+│   ├── marketData.js              # API Frankfurter
+│   └── signalTracker.js           # Tracking de sinais
+├── lib/
+│   ├── performanceCalculator.js   # Cálculos de performance
+│   └── utils.js                   # Utilitários
+├── agents/
+│   └── index.js                   # Re-export do SDK
+├── src/
+│   ├── main.jsx                   # Entry point
+│   └── index.css                  # Estilos globais
+├── Layout.jsx                     # Layout principal com rotas
+├── index.html                     # HTML principal
+├── vite.config.js                 # Configuração do Vite
+├── tailwind.config.js             # Configuração do Tailwind
+├── package.json                   # Dependências
+├── .env                           # Variáveis de ambiente (não commitar!)
+├── .env.example                   # Exemplo de variáveis
+└── README.md                      # Este arquivo
 ```
 
-## ⚠️ IMPORTANTE: Inconsistência de Extensões de Arquivo
-
-**ATENÇÃO**: Os arquivos na pasta `Pages/` e `Components/` possuem extensão `.html`, mas na verdade contêm **código React/JSX** (JavaScript). Esta é uma inconsistência que deve ser corrigida para melhor organização do projeto.
-
-### Arquivos afetados:
-- `Pages/Dashboard.html` → deveria ser `.jsx` ou `.tsx`
-- `Pages/Agent.html` → deveria ser `.jsx` ou `.tsx`
-- `Pages/History.html` → deveria ser `.jsx` ou `.tsx`
-- `Pages/Performance.html` → deveria ser `.jsx` ou `.tsx`
-- `Components/agent/MessageBubble.html` → deveria ser `.jsx` ou `.tsx`
-- `Components/signals/SignalCard.html` → deveria ser `.jsx` ou `.tsx`
-- `Components/signals/MarketOverview.html` → deveria ser `.jsx` ou `.tsx`
-- `Components/signals/SignalGenerator.html` → deveria ser `.jsx` ou `.tsx`
-
-Todos estes arquivos contêm:
-- Imports React
-- JSX válido
-- Hooks do React (useState, useEffect, useRef)
-- Componentes React modernos
-
-## Como Rodar Localmente
+## 🚀 Como Rodar Localmente
 
 ### Pré-requisitos
 
@@ -146,145 +179,182 @@ Todos estes arquivos contêm:
 
 ### Configuração Inicial
 
-1. Clone o repositório:
+1. **Clone o repositório:**
 ```bash
 git clone <url-do-repositorio>
 cd forex-pro
 ```
 
-2. Instale as dependências:
+2. **Instale as dependências:**
 ```bash
 npm install
 ```
 
-3. Configure as variáveis de ambiente:
+3. **Configure as variáveis de ambiente:**
 
-O projeto já inclui um arquivo `.env.example`. Copie-o para `.env`:
-
+Copie o `.env.example` para `.env`:
 ```bash
 cp .env.example .env
 ```
 
-Depois edite o arquivo `.env` e adicione sua chave da OpenAI:
-
+Edite o arquivo `.env` e adicione sua chave da OpenAI:
 ```env
 # OpenAI API Configuration
-OPENAI_API_KEY=sk-sua_chave_api_openai_aqui
+VITE_OPENAI_API_KEY=sk-sua_chave_api_openai_aqui
 
 # Configuração opcional
-OPENAI_MODEL=gpt-4-turbo-preview
-OPENAI_TEMPERATURE=0.7
+VITE_OPENAI_MODEL=gpt-4o-mini
+VITE_OPENAI_TEMPERATURE=0.7
 ```
 
-**IMPORTANTE**:
-- Nunca compartilhe ou faça commit do arquivo `.env` (ele já está no `.gitignore`)
-- Obtenha sua chave em: https://platform.openai.com/api-keys
-- O modelo padrão é `gpt-4-turbo-preview`, mas você pode usar `gpt-3.5-turbo` para reduzir custos
+**IMPORTANTE:**
+- ✅ Use o prefixo `VITE_` para todas as variáveis (Vite requirement)
+- ✅ Nunca faça commit do arquivo `.env` (já está no `.gitignore`)
+- ✅ O modelo `gpt-4o-mini` é recomendado (barato e eficiente)
 
 ### Executando a Aplicação
-
-O projeto já está configurado com **Vite** como bundler. Para iniciar:
 
 ```bash
 npm run dev
 ```
 
-A aplicação estará disponível em: **http://localhost:3000**
+A aplicação estará disponível em: **http://localhost:3001**
 
 ### Scripts Disponíveis
 
 - `npm run dev` - Inicia o servidor de desenvolvimento
 - `npm run build` - Cria build de produção
 - `npm run preview` - Preview do build de produção
-- `npm run lint` - Executa o linter
 
-## Estrutura de Dados
+## 📊 Estrutura de Dados
 
 ### Signal Entity
 
 ```javascript
 {
-  id: string,
-  currency_pair: string,        // Ex: "EUR/USD", "GBP/JPY"
-  signal_type: "BUY" | "SELL",
-  entry_price: number,
-  take_profit: number,
-  stop_loss: number,
-  confidence: number,            // 1-10
-  analysis: string,
-  time_frame: "5M" | "15M" | "1H" | "4H" | "1D",
-  risk_reward: number,
-  pips_potential: number,
-  status: "ACTIVE" | "HIT_TP" | "HIT_SL" | "EXPIRED",
-  created_date: Date
+  id: string,                       // ID único gerado
+  currency_pair: string,            // Ex: "EUR/USD", "GBP/JPY"
+  signal_type: "BUY" | "SELL",     // Tipo de operação
+  entry_price: number,              // Preço de entrada
+  take_profit: number,              // Take Profit
+  stop_loss: number,                // Stop Loss
+  confidence: number,               // Confiança (1-10)
+  analysis: string,                 // Análise detalhada
+  time_frame: "15M" | "1H" | "4H", // Timeframe
+  risk_reward: number,              // Risk:Reward ratio (ex: 2.5)
+  pips_potential: number,           // Pips potenciais
+  status: "ACTIVE" | "HIT_TP" | "HIT_SL", // Status do sinal
+  created_date: string,             // Data de criação (ISO)
+  closed_date?: string,             // Data de fechamento (ISO)
+  close_price?: number,             // Preço de fechamento
+  source: "REAL_TIME_DATA",         // Fonte dos dados
+  data_provider: "Frankfurter_API_BCE", // Provedor
+  generated_at: string              // Timestamp de geração
 }
 ```
 
-## Funcionalidades por Página
+## 🎯 Funcionalidades por Página
 
 ### 1. Dashboard (`/`)
-- Visão geral do mercado
-- Estatísticas de sinais ativos
-- Lista de sinais ativos mais recentes
-- Gerador de novos sinais
+- 📊 4 cards de estatísticas (Win Rate, Pips, Sinais Ativos, Confiança)
+- 🔍 Monitor de tracking automático
+- ⚡ Gerador de sinais com dados reais
+- 📋 Lista de sinais ativos mais recentes
+- 🎨 Atualização automática em tempo real
 
 ### 2. Assistente (`/agent`)
-- Chat interativo com Claude
-- Gerenciamento de sinais via texto
-- Histórico de conversação
-- Visualização de tool calls
+- 💬 Chat interativo com IA
+- 🔧 Gerenciamento de sinais via texto
+- 📝 Histórico de conversação
+- 🎯 Comandos de voz (futuro)
 
 ### 3. Histórico (`/history`)
-- Todos os sinais gerados
-- Filtros por status
-- Detalhes completos de cada sinal
-- Ordenação por data
+- 📜 Todos os sinais gerados
+- 🔍 Filtros por status
+- 📊 Detalhes completos de cada sinal
+- 📅 Ordenação por data
 
 ### 4. Performance (`/performance`)
-- Estatísticas gerais
-- Taxa de acerto
-- Pips líquidos
-- Performance por par de moedas
-- Sinais mais recentes
+- 📈 Estatísticas gerais (Win Rate, Pips, Total)
+- 🏆 Performance por par de moedas
+- 📊 Breakdown por status
+- 🎯 Top sinais (melhores e piores)
+- 📅 Performance recente
 
-## Segurança e Disclaimer
+## 🔄 Roadmap
 
-⚠️ **AVISO IMPORTANTE**:
-- Esta aplicação é apenas para fins educacionais e de demonstração
-- Não constitui aconselhamento financeiro
-- Trading de Forex envolve risco significativo de perda
-- Sempre faça sua própria pesquisa antes de tomar decisões de trading
-- Use contas de demonstração antes de operar com dinheiro real
+### ✅ FASE 1: Tracking Local (CONCLUÍDO)
+- [x] Serviço de tracking de sinais (`signalTracker.js`)
+- [x] Verificação automática a cada 5 minutos
+- [x] Controles manuais nos cards
+- [x] Notificações em tempo real
 
-## Próximos Passos Recomendados
+### ✅ FASE 2: Performance e Estatísticas (CONCLUÍDO)
+- [x] Calculadora de performance (`performanceCalculator.js`)
+- [x] Dashboard com estatísticas reais
+- [x] Página Performance completa
+- [x] Win Rate, Pips, Performance por par
 
-1. **Corrigir extensões de arquivo**: Renomear todos os `.html` para `.jsx` ou `.tsx`
-2. **Adicionar package.json**: Configurar dependências e scripts
-3. **Configurar bundler**: Vite ou Next.js
-4. **Adicionar TypeScript**: Para melhor type safety
-5. **Implementar testes**: Jest + React Testing Library
-6. **Adicionar CI/CD**: GitHub Actions
-7. **Documentar API**: Documentar integrações com OpenAI
-8. **Adicionar autenticação**: Sistema de usuários
-9. **Deploy**: Vercel, Netlify ou AWS
+### ⏳ FASE 3: Nuvem e Automação (FUTURO)
+- [ ] Integração com Supabase (banco de dados em nuvem)
+- [ ] Automação N8N (verificação mesmo com app fechado)
+- [ ] Notificações por email/telegram
+- [ ] Sincronização entre dispositivos
+- [ ] Backup automático
 
-## Contribuindo
+### 🚀 Melhorias Futuras
+- [ ] Autenticação de usuários
+- [ ] Gráficos de performance (Chart.js)
+- [ ] Exportação de relatórios (PDF/CSV)
+- [ ] Backtesting de estratégias
+- [ ] Integração com corretoras (API MT4/MT5)
+- [ ] App mobile (React Native)
+
+## ⚙️ Configurações de Deploy
+
+### Vercel
+
+O projeto está configurado para deploy no Vercel. Certifique-se de:
+
+1. ✅ Adicionar a variável `VITE_OPENAI_API_KEY` nas Settings do projeto
+2. ✅ Usar Node.js 18+
+3. ✅ Build command: `npm run build`
+4. ✅ Output directory: `dist`
+
+O arquivo `vercel.json` já está configurado corretamente.
+
+## ⚠️ Segurança e Disclaimer
+
+**AVISO IMPORTANTE:**
+- 🎓 Esta aplicação é para fins **educacionais** e de **demonstração**
+- ⚠️ **NÃO constitui aconselhamento financeiro**
+- 💰 Trading de Forex envolve **risco significativo de perda**
+- 📚 Sempre faça sua **própria pesquisa** antes de tomar decisões de trading
+- 🧪 Use **contas demo** antes de operar com dinheiro real
+- 🔒 Nunca compartilhe sua chave da API OpenAI
+
+## 🤝 Contribuindo
 
 Contribuições são bem-vindas! Por favor:
+
 1. Faça um fork do projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
 3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
-## Licença
+## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-## Contato
+## 📞 Suporte
 
-Para dúvidas ou sugestões, abra uma issue no repositório.
+Para dúvidas, sugestões ou problemas:
+- Abra uma [Issue](../../issues)
+- Consulte o [Guia de Início Rápido](GUIA_INICIO_RAPIDO.md)
+- Veja o [Plano de Implementação](PLANO_IMPLEMENTACAO.md)
 
 ---
 
-**Desenvolvido com OpenAI GPT-4**
+**🤖 Desenvolvido com Claude Code + OpenAI GPT-4**
+✨ Sistema totalmente funcional com dados reais e tracking automático

@@ -6,19 +6,25 @@ import { TrendingUp, TrendingDown, Clock, Target, Shield, Zap, CheckCircle2, XCi
 import { motion } from "framer-motion";
 import { manuallyCloseSignal } from "@/integrations/signalTracker";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function SignalCard({ signal, index, onSignalUpdated }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const isBuy = signal.signal_type === "BUY";
-  const signalColor = isBuy ? "text-green-400" : "text-red-400";
-  const borderColor = isBuy ? "border-green-500/30" : "border-red-500/30";
-  const bgGradient = isBuy 
-    ? "bg-gradient-to-br from-green-500/5 to-green-600/10" 
-    : "bg-gradient-to-br from-red-500/5 to-red-600/10";
+  
+  // Semantic colors for Buy/Sell
+  const accentColor = isBuy ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400";
+  const cardClass = isBuy 
+    ? "bg-emerald-50/50 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-900/50 hover:border-emerald-300 dark:hover:border-emerald-800" 
+    : "bg-rose-50/50 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/50 hover:border-rose-300 dark:hover:border-rose-800";
+  
+  const badgeClass = isBuy
+    ? "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
+    : "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800";
 
   const getConfidenceColor = (confidence) => {
-    if (confidence >= 8) return "bg-green-500";
-    if (confidence >= 6) return "bg-yellow-500";
+    if (confidence >= 8) return "bg-emerald-500";
+    if (confidence >= 6) return "bg-amber-500";
     return "bg-orange-500";
   };
 
@@ -47,119 +53,123 @@ export default function SignalCard({ signal, index, onSignalUpdated }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <Card className={`${bgGradient} border-gray-700 ${borderColor} hover:border-gray-600 transition-all duration-300`}>
+      <Card className={cn("border transition-all duration-300 shadow-sm", cardClass)}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {isBuy ? (
-                <TrendingUp className="w-6 h-6 text-green-400" />
-              ) : (
-                <TrendingDown className="w-6 h-6 text-red-400" />
-              )}
+              <div className={cn("p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border", accentColor)}>
+                 {isBuy ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+              </div>
               <div>
-                <h3 className="text-xl font-bold text-white">{signal.currency_pair}</h3>
-                <Badge 
-                  className={`${isBuy ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'} border`}
-                >
+                <h3 className="text-lg font-bold tracking-tight">{signal.currency_pair}</h3>
+                <Badge variant="outline" className={cn("font-semibold", badgeClass)}>
                   {signal.signal_type}
                 </Badge>
               </div>
             </div>
             <div className="text-right">
-              <div className="flex items-center gap-2 mb-1">
-                <Zap className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-gray-400">Confiança</span>
+              <div className="flex items-center justify-end gap-1.5 mb-1">
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Confiança</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${getConfidenceColor(signal.confidence)}`}></div>
-                <span className="font-bold text-white">{signal.confidence}/10</span>
+              <div className="flex items-center justify-end gap-2">
+                <div className={cn("w-2 h-2 rounded-full shadow-sm", getConfidenceColor(signal.confidence))}></div>
+                <span className="font-bold text-foreground">{signal.confidence}/10</span>
               </div>
             </div>
           </div>
         </CardHeader>
         
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-background/40 rounded-lg border border-border/50">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Target className="w-4 h-4 text-blue-400" />
-                <span className="text-sm text-gray-400">Entrada</span>
+                <Target className="w-3.5 h-3.5 text-blue-500" />
+                <span className="text-xs font-medium text-muted-foreground">Entrada</span>
               </div>
-              <p className="font-mono text-lg font-bold text-white">{signal.entry_price}</p>
+              <p className="font-mono text-base font-bold">{signal.entry_price}</p>
             </div>
             
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-gray-400">Take Profit</span>
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                <span className="text-xs font-medium text-muted-foreground">Take Profit</span>
               </div>
-              <p className="font-mono text-lg font-bold text-green-400">{signal.take_profit}</p>
+              <p className="font-mono text-base font-bold text-emerald-600 dark:text-emerald-400">{signal.take_profit}</p>
             </div>
             
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Shield className="w-4 h-4 text-red-400" />
-                <span className="text-sm text-gray-400">Stop Loss</span>
+                <Shield className="w-3.5 h-3.5 text-rose-500" />
+                <span className="text-xs font-medium text-muted-foreground">Stop Loss</span>
               </div>
-              <p className="font-mono text-lg font-bold text-red-400">{signal.stop_loss}</p>
+              <p className="font-mono text-base font-bold text-rose-600 dark:text-rose-400">{signal.stop_loss}</p>
             </div>
             
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Clock className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-gray-400">Período</span>
+                <Clock className="w-3.5 h-3.5 text-purple-500" />
+                <span className="text-xs font-medium text-muted-foreground">Período</span>
               </div>
-              <p className="font-mono text-lg font-bold text-purple-400">{signal.time_frame}</p>
+              <p className="font-mono text-base font-bold text-purple-600 dark:text-purple-400">{signal.time_frame}</p>
             </div>
           </div>
           
-          <div className="flex items-center justify-between pt-3 border-t border-gray-700">
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
-                <span className="text-gray-400">R:R </span>
-                <span className="text-yellow-400 font-bold">1:{signal.risk_reward}</span>
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-1.5 bg-background/50 px-2 py-1 rounded border border-border/50">
+                <span className="text-muted-foreground text-xs">R:R</span>
+                <span className="text-amber-600 dark:text-amber-400 font-bold">1:{signal.risk_reward}</span>
               </div>
-              <div className="text-sm">
-                <span className="text-gray-400">Pips </span>
-                <span className="text-blue-400 font-bold">+{signal.pips_potential}</span>
+              <div className="flex items-center gap-1.5 bg-background/50 px-2 py-1 rounded border border-border/50">
+                <span className="text-muted-foreground text-xs">Pips</span>
+                <span className="text-blue-600 dark:text-blue-400 font-bold">+{signal.pips_potential}</span>
               </div>
             </div>
             <Badge 
               variant="outline" 
-              className={`${signal.status === 'ACTIVE' ? 'text-green-400 border-green-500/30' : 'text-gray-400 border-gray-600'}`}
+              className={cn(
+                signal.status === 'ACTIVE' 
+                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800' 
+                  : 'bg-muted text-muted-foreground border-border'
+              )}
             >
               {signal.status}
             </Badge>
           </div>
           
           {signal.analysis && (
-            <div className="pt-3 border-t border-gray-700">
-              <p className="text-sm text-gray-300 leading-relaxed">{signal.analysis}</p>
+            <div className="pt-3 border-t border-black/5 dark:border-white/5">
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 hover:line-clamp-none transition-all cursor-default">
+                {signal.analysis}
+              </p>
             </div>
           )}
 
           {/* Controles manuais - apenas para sinais ACTIVE */}
           {signal.status === 'ACTIVE' && (
-            <div className="pt-3 border-t border-gray-700">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-400 mr-2">Fechar manualmente:</span>
+            <div className="pt-3 border-t border-black/5 dark:border-white/5">
+              <div className="flex items-center gap-2 justify-end">
+                <span className="text-xs text-muted-foreground mr-auto">Fechar manualmente:</span>
                 <Button
                   onClick={() => handleManualClose('TP')}
                   disabled={isUpdating}
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700 text-white"
+                  variant="outline"
+                  className="h-7 text-xs border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 dark:border-emerald-900 dark:text-emerald-400 dark:hover:bg-emerald-950"
                 >
                   <CheckCircle2 className="w-3 h-3 mr-1" />
-                  TP Atingido
+                  TP
                 </Button>
                 <Button
                   onClick={() => handleManualClose('SL')}
                   disabled={isUpdating}
                   size="sm"
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  variant="outline"
+                  className="h-7 text-xs border-rose-200 text-rose-700 hover:bg-rose-50 hover:text-rose-800 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-950"
                 >
                   <XCircle className="w-3 h-3 mr-1" />
-                  SL Atingido
+                  SL
                 </Button>
               </div>
             </div>
